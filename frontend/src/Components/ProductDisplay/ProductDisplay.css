@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+.productdisplay{
+    display:flex;
+    margin: 100px 50px;
+    margin-right: 500px;
+    margin-left: 300px
+}
+
+.productdisplay-left {
+    display: flex;
+    gap: 30px;
+    align-items: top;
+}
+
+.productdisplay-img-list{
+    flex-direction: column;
+    gap: 5px;
+}
+.productdisplay-img-list img{    
+    height: 80px;
+    cursor: pointer;
+}
+.productdisplay-main-img{
+    width: 3000px;
+    height: 400px;
+}
+
+.productdisplay-img {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    height: 400px;        
+}
+
+
+.productdisplay-img-previousimage,
+.productdisplay-img-nextimage {
+    position: absolute;
+    top: 50%;                           
+    transform: translateY(-50%);
+    width: 35px;
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.productdisplay-img-previousimage {
+    left: -35px;
+}
+
+.productdisplay-img-nextimage {
+    right: -35px;
+}
+
+.productdisplay-right{
+    margin: 30px 70px;
+    display: flex;
+    flex-direction: column;
+}
+.productdisplay-right h1{
+    color: black;
+    font-size: 38px;
+    font-weight: 700;
+}
+
+.productdisplay-attribute-name{
+    margin-top: 55px;
+    color: black;
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.productdisplay-attribute-type-color{
+    height: 30px;
+    width: 30px;
+    margin: 2px;
+    cursor: pointer;      
+}
+
+.productdisplay-attribute-type-standard{
+    height: 35px;
+    width: 60px;
+    justify-items: center;
+    margin-bottom: 15px;
+    border: 1px solid #1d1f22;   
+    cursor: pointer;
+    font-weight: 500; 
+}
+
+.productdisplay-right button{
+    margin-top: 40px;
+    padding: 20px 40px;
+    width: 400px;
+    height: 60px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    background: gray;
+    margin-bottom: 40px;
+    border: none;
+    outline: none;
+}
+
+.productdisplay-right-price{
+    margin-top: 30px;
+    color: black;
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.productdisplay-right-amount{
+    margin-top: 10px;
+    color: black;
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.productdisplay-right-amount{
+    margin-top: 10px;
+    color: black;
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.productdisplay-right-description{
+    color: black;
+    font-size: 15px;
+    font-weight: 200;
+    display:flex;
+    text-wrap: wrap;
+}

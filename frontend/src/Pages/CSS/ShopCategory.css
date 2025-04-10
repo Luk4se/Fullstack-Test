@@ -1,0 +1,13 @@
+.shopcategory-products{
+    margin: 100px 70px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    row-gap: 80px;
+    justify-items: left;
+}
+
+.shopcategory-name{
+    text-transform: uppercase;
+    font-size: 40px;
+    margin: 100px 50px;
+}

@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+.item {
+    position: relative;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    padding: 10px;
+    border: 2px solid transparent; /* Space for hover effect without a visible line */
+    background-color: white;
+    border-radius: 8px; /* optional: gives a rounded feel */
+  }
+  
+  .item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); /* stronger shadow */
+    background-color: white;
+    border-color: transparent; /* keep it invisible */
+  }
+  
+
+.item p {
+    margin: 6px 0px;
+}
+
+.item-prices {
+    display: flex;
+    gap: 20px;
+}
+
+.item-price {
+    color: #374151;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.item-image {
+    max-height: 300px;
+    max-width: 300px;
+}
+
+
+.cart-button {
+    position: absolute;
+    bottom: 65px;
+    right: 25px;
+    width: 40px;
+    height: 40px;
+    background-color: #5CCE81;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+
+.item:hover .cart-button {
+    opacity: 1;
+}
+
+  .cart-button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .item-image-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .item-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: 0.3s ease;
+  }
+  
+  .out-of-stock-image {
+    filter: grayscale(100%) brightness(0.8);
+    opacity: 0.6;
+  }
+
+  .overlay-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.3rem;
+    color: #555;
+    border-radius: 5px;
+    font-weight: bold;
+  }
