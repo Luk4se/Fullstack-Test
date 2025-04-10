@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import './ProductDisplay.css';
-import Previous from '../assets/previous.svg';
-import Next from '../assets/next.svg';
+import Previous from '../Assets/previous.svg';
+import Next from '../Assets/next.svg';
 import { CartContext } from '../../Context/CartContext';
 
 const ProductDisplay = ({ product }) => {

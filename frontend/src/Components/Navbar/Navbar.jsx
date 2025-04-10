@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Cart } from "../assets/icons"; 
-import Logo from "../assets/logo.svg";
+import { Cart } from "../Assets/icons"; 
+import Logo from "../Assets/logo.svg";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { useCart } from "../../Context/CartContext";

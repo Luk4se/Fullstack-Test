@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "./Cartsidebar.css";
+import "./CartSidebar.css";
 import { useCart } from "../../Context/CartContext";
 
 const CartSidebar = () => {
