@@ -1,28 +1,36 @@
-# Use an official PHP image with extensions
-FROM php:8.2-cli
-
-# Set working directory
-WORKDIR /var/www
+FROM php:8.2-apache
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    curl \
+    libpq-dev \
     libzip-dev \
-    && docker-php-ext-install zip
+    unzip \
+    zip \
+    git \
+    curl \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libonig-dev \
+    libxml2-dev \
+    && docker-php-ext-install pdo pdo_mysql
+
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy source files
+COPY . .
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy project files
-COPY . .
-
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install
 
-# Expose port
-EXPOSE 8000
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html
 
-# Run the PHP built-in server
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+EXPOSE 80

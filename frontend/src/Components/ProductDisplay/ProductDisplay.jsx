@@ -83,10 +83,9 @@ const ProductDisplay = ({ product }) => {
         {product.attributes.map((attribute, attrIndex) => (
           <div
             key={product.attributes?.[0].name}
-            className="productdisplay-attribute-name space-y-2"
-            data-testid={`product-attribute-${toKebabCase(attribute.name)}`}>
+            className="productdisplay-attribute-name space-y-2">
 
-            <div className="font-bold">{attribute.name}:</div>
+            <div className="font-bold" data-testid={`product-attribute-${toKebabCase(attribute.name)}`}>{attribute.name}:</div>
             <div className="flex gap-1">
               
               {attribute.items.map((item, choiceIndex) => {
@@ -97,6 +96,7 @@ const ProductDisplay = ({ product }) => {
                   <div
                     key={choiceIndex}
                     className="productdisplay-attribute-type-color"
+                    data-testid={`product-attribute-${toKebabCase(attribute.name)}-${(item.value)}`}
                     style={{
                       ...commonStyles,
                       backgroundColor: item.value,
@@ -108,6 +108,7 @@ const ProductDisplay = ({ product }) => {
                   <div
                     key={choiceIndex}
                     className="productdisplay-attribute-type-standard text-center items-center"
+                    data-testid={`product-attribute-${toKebabCase(attribute.name)}-${(item.value)}`}
                     style={{
                       ...commonStyles,
                       backgroundColor: isSelected ? '#1d1f22' : 'white',

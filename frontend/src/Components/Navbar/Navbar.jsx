@@ -4,14 +4,12 @@ import Logo from "../Assets/logo.svg";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { useCart } from "../../Context/CartContext";
-import { useQuery } from '@apollo/client';
-import { GET_CATEGORIES } from "../GraphQL/Queries";
+
 
 const Navbar = () => {
   const [menu, setMenu] = useState("all");
   const { cart = [], isCartOpen, setIsCartOpen } = useCart();
   const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
-  const { loading, error, data } = useQuery(GET_CATEGORIES);
 
   const cartIconRef = useRef(null);
   const prevCartQuantity = useRef(0);
@@ -54,11 +52,11 @@ const Navbar = () => {
   };
  
 
-  const categories = data?.categories?.map((cat) => ({
-    label: cat.name.toUpperCase(),
-    path: cat.name === 'all' ? '/' : `/${cat.name}`,
-    value: cat.name
-  })) || [];
+  const categories = [
+    { label: "ALL", path: "/all", value: "all" },
+    { label: "CLOTHES", path: "/clothes", value: "clothes" },
+    { label: "TECH", path: "/tech", value: "tech" },
+  ];
 
 
 
@@ -67,27 +65,24 @@ const Navbar = () => {
       <div className="navbar">
         <p className="w-200"></p>
         <ul className="navbar-menu">
-          {categories.map((cat) => {
-            const isActive = menu === cat.value;
-            return (
-              <li
-                key={cat.value}
-                className="hover:text-green-500"
-                onClick={() => setMenu(cat.value)}
-              >
-                <Link to={cat.path}>
-                  <p
-                    data-testid={isActive ? "active-category-link" : "category-link"}
-                    className={`${
-                      isActive ? "text-green-500 underline" : "hover:underline"
-                    } underline-offset-[32px] decoration-2`}
-                  >
-                    {cat.label}
-                  </p>
-                </Link>
-              </li>
-            );
-          })}
+        {categories.map((cat) => {
+        const isActive = menu === cat.value;
+          return (
+            <li
+              key={cat.value}
+              className="hover:text-green-500"
+              onClick={() => setMenu(cat.value)}>
+              <Link to={cat.path} data-testid={isActive ? "active-category-link" : "category-link"}>
+                <p                  
+                  className={`${
+                  isActive ? "text-green-500 underline" : "hover:underline"
+                  } underline-offset-[32px] decoration-2`}>
+                  {cat.label}
+                </p>
+              </Link>
+            </li>
+          );
+        })}
         </ul>
 
         <img className="nav-logo" src={Logo} alt="logo" />
@@ -97,8 +92,9 @@ const Navbar = () => {
             totalQuantity === 0 ? "cart-disabled" : "cart-active"
           }`}
           onClick={handleCartClick}
+          data-testid="cart-btn"
         >
-          <Cart data-testid="cart-btn" />
+          <Cart />
           {cart.length > 0 && (
             <div
               ref={cartIconRef}

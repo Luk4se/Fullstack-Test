@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:8000/graphql', // your backend endpoint
+  uri: 'https://scandiweb-test-backend-g3ln.onrender.com/graphql', // your backend endpoint
   cache: new InMemoryCache(),
 });
 

@@ -29,7 +29,7 @@ const CartSidebar = () => {
   };
 
   return (
-    <div className="cart-overlay-wrapper" onClick={handleClose}>
+    <div className="cart-overlay-wrapper" onClick={handleClose} data-testid="cart-overlay">
       <div className="cart-sidebar" onClick={(e) => e.stopPropagation()}>
         <div className="cart-header">
           <h2 data-testid="cart-item-amount">
@@ -59,7 +59,7 @@ const CartSidebar = () => {
                       {attr.items.map((option) => {
                       const isSelected = selectedValue === option.value;
                         return (
-                        <div data-testid={`cart-item-attribute-${toKebabCase(attr.name)}-${toKebabCase(option.displayValue || option.value)}${isSelected ?"-selected":""}`}
+                        <div data-testid={`cart-item-attribute-${toKebabCase(attr.name)}-${toKebabCase(option.value)}${isSelected ?"-selected":""}`}
                           key={option.item_id || option.value}
                           className={`attribute-option ${isSelected ? "selected" : ""} ${isSwatch ? "swatch" : ""}`}
                           style={isSwatch ? { backgroundColor: option.value } : {}}

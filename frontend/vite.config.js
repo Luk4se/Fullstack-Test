@@ -10,7 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/graphql': {
-        target: 'http://localhost:8000',
+        target: 'https://scandiweb-test-backend-g3ln.onrender.com',
         changeOrigin: true,
       }
     }

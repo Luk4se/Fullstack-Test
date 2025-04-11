@@ -42,7 +42,7 @@ header {
 
 .cart-disabled svg {
     color: grey;
-    color: not-allowed;
+    filter: grayscale(100%);
   }
   
   .cart-active svg {

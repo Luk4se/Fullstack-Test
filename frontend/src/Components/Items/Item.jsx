@@ -18,7 +18,7 @@ const Item = (props) => {
     addToCart(props.id, defaultChoices);
     setIsCartOpen(true);
   };
-
+  
   const isOutOfStock = props.inStock === false;
 
   return (

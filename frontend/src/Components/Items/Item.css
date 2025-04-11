@@ -4,6 +4,8 @@
     position: relative;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     padding: 10px;
+    display: flex;
+    left: 100px;
     border: 2px solid transparent; /* Space for hover effect without a visible line */
     background-color: white;
     border-radius: 8px; /* optional: gives a rounded feel */
