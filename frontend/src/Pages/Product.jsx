@@ -7,7 +7,7 @@ function Product() {
   const { productId } = useParams();
 
   if (loading) return <p>Loading product...</p>;
-  if (error) return <p>Error loading product.</p>;
+  if (error) return <p>Error loading product. Please try again later.</p>;
 
   const product = all_product.find((element) => element.id === productId);
 

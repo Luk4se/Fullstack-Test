@@ -12,8 +12,16 @@ const CartSidebar = () => {
     addToCart,
     placeOrder,
   } = useCart();
-  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
   const sidebarRef = useRef(null);
+
+  const { totalItems, totalPrice } = cart.reduce(
+    (acc, item) => {
+      acc.totalItems += item.quantity;
+      acc.totalPrice += item.price * item.quantity;
+      return acc;
+    },
+    { totalItems: 0, totalPrice: 0 }
+  );
 
   useEffect(() => {
     if (isCartOpen) {
@@ -137,15 +145,7 @@ const CartSidebar = () => {
           <div className='cart-total' data-testid='cart-total'>
             <p>Total</p>
             <p>
-              <strong>
-                $
-                {cart
-                  .reduce(
-                    (total, item) => total + item.price * item.quantity,
-                    0
-                  )
-                  .toFixed(2)}
-              </strong>
+              <strong>${totalPrice.toFixed(2)}</strong>
             </p>
           </div>
           <button className='place-order-btn' onClick={placeOrder}>

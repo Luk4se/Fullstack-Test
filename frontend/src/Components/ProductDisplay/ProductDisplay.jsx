@@ -10,13 +10,15 @@ const ProductDisplay = ({ product }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState({});
 
-  const nextImage = () =>
-    setCurrentIndex((prev) => (prev + 1) % product.gallery.length);
-
-  const prevImage = () =>
+  const nextImage = () => {
     setCurrentIndex((prev) =>
-      prev === 0 ? product.gallery.length - 1 : prev - 1
+      prev < product.gallery.length - 1 ? prev + 1 : prev
     );
+  };
+
+  const prevImage = () => {
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : prev));
+  };
 
   const handleSelect = (attrIndex, choiceIndex) => {
     setSelected((prev) => ({
@@ -62,20 +64,27 @@ const ProductDisplay = ({ product }) => {
             alt='Main product'
             data-testid='product-main-image'
           />
-          <img
-            onClick={prevImage}
-            className='productdisplay-img-previousimage'
-            src={Previous}
-            alt='Previous'
-            data-testid='previous-image'
-          />
-          <img
-            onClick={nextImage}
-            className='productdisplay-img-nextimage'
-            src={Next}
-            alt='Next'
-            data-testid='next-image'
-          />
+
+          {product.gallery.length > 1 && currentIndex > 0 && (
+            <img
+              onClick={prevImage}
+              className='productdisplay-img-previousimage'
+              src={Previous}
+              alt='Previous'
+              data-testid='previous-image'
+            />
+          )}
+
+          {product.gallery.length > 1 &&
+            currentIndex < product.gallery.length - 1 && (
+              <img
+                onClick={nextImage}
+                className='productdisplay-img-nextimage'
+                src={Next}
+                alt='Next'
+                data-testid='next-image'
+              />
+            )}
         </figure>
       </section>
 

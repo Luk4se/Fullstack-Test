@@ -1,25 +1,20 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
-import { GET_ALL_PRODUCTS } from '../Utils/GraphQL/Queries';
+import { useMutation } from '@apollo/client';
 import { CREATE_ORDER } from '../Utils/GraphQL/Mutations';
+import { useShop } from './ShopContext';
 
 export const CartContext = createContext();
 
 const CartContextProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-
-  const { data, loading, error } = useQuery(GET_ALL_PRODUCTS);
-  const all_product = data?.products || [];
   const [insertOrder] = useMutation(CREATE_ORDER);
+  const { all_product } = useShop();
 
   useEffect(() => {
     const storedCart = localStorage.getItem('cartData');
     if (storedCart) {
-      const parsedCart = JSON.parse(storedCart);
-      if (Array.isArray(parsedCart)) {
-        setCart(parsedCart);
-      }
+      setCart(JSON.parse(storedCart));
     }
   }, []);
 
@@ -53,7 +48,6 @@ const CartContextProvider = ({ children }) => {
       }
 
       setCart([]);
-      localStorage.removeItem('cartData');
       alert('Order placed successfully!');
     } catch (error) {
       console.error('GraphQL error:', error.graphQLErrors);
@@ -70,19 +64,16 @@ const CartContextProvider = ({ children }) => {
     const selectedPrice = product.prices?.[0]?.amount ?? 0;
 
     setCart((prevCart) => {
-      const existingItem = prevCart.find(
+      const existingItemIndex = prevCart.findIndex(
         (item) =>
           item.id === itemId &&
           JSON.stringify(item.choices) === JSON.stringify(selectedChoices)
       );
 
-      if (existingItem) {
-        return prevCart.map((item) =>
-          item.id === itemId &&
-          JSON.stringify(item.choices) === JSON.stringify(selectedChoices)
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
+      if (existingItemIndex > -1) {
+        const updatedCart = [...prevCart];
+        updatedCart[existingItemIndex].quantity += quantity;
+        return updatedCart;
       } else {
         return [
           ...prevCart,
@@ -101,16 +92,16 @@ const CartContextProvider = ({ children }) => {
   };
 
   const removeFromCart = (itemId, selectedChoices) => {
-    setCart((prevCart) => {
-      return prevCart
-        .map((item) => {
-          const isMatch =
-            item.id === itemId &&
-            JSON.stringify(item.choices) === JSON.stringify(selectedChoices);
-          return isMatch ? { ...item, quantity: item.quantity - 1 } : item;
-        })
-        .filter((item) => item.quantity > 0);
-    });
+    setCart((prevCart) =>
+      prevCart
+        .map((item) =>
+          item.id === itemId &&
+          JSON.stringify(item.choices) === JSON.stringify(selectedChoices)
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
   };
 
   const contextValue = {
@@ -120,9 +111,6 @@ const CartContextProvider = ({ children }) => {
     placeOrder,
     isCartOpen,
     setIsCartOpen,
-    all_product,
-    loading,
-    error,
   };
 
   return (

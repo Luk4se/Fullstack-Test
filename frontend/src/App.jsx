@@ -18,25 +18,23 @@ const App = () => {
   }, [data]);
 
   return (
-    <div>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path='/' element={<Navigate to='/all' />} />
-          {categories.map((category) => (
-            <Route
-              key={category.name}
-              path={`/${category.name}`}
-              element={<ShopCategory category={category.name} />}
-            />
-          ))}
-          <Route path='product'>
-            <Route path=':productId' element={<Product />} />
-          </Route>
-        </Routes>
-        <CartSidebar />
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path='/' element={<Navigate to='/all' />} />
+        {categories.map((category) => (
+          <Route
+            key={category.name}
+            path={`/${category.name}`}
+            element={<ShopCategory category={category.name} />}
+          />
+        ))}
+        <Route path='product'>
+          <Route path=':productId' element={<Product />} />
+        </Route>
+      </Routes>
+      <CartSidebar />
+    </BrowserRouter>
   );
 };
 

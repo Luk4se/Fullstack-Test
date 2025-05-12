@@ -10,7 +10,7 @@ const ShopContextProvider = ({ children }) => {
   const contextValue = {
     all_product: data?.products || [],
     loading,
-    error,
+    error: error ? error.message : null,
   };
 
   return (

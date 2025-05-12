@@ -14,6 +14,7 @@ const Navbar = () => {
   const categories = data?.categories || [];
   const cartIconRef = useRef(null);
   const prevCartQuantity = useRef(0);
+  const [animationClass, setAnimationClass] = useState('');
 
   const location = useLocation();
   const [activeCategory, setActiveCategory] = useState('all');
@@ -27,32 +28,23 @@ const Navbar = () => {
 
   useEffect(() => {
     if (!cartIconRef.current) return;
-
-    const current = cartIconRef.current;
     const prevQuantity = prevCartQuantity.current;
-    let classToAdd = '';
 
     if (totalQuantity > prevQuantity) {
-      classToAdd = 'bounce';
+      setAnimationClass('bounce');
     } else if (totalQuantity < prevQuantity && totalQuantity > 0) {
-      classToAdd = 'shrink';
+      setAnimationClass('shrink');
     } else if (totalQuantity === 0 && prevQuantity > 0) {
-      classToAdd = 'fade-out';
-    }
-
-    if (classToAdd) {
-      current.classList.add(classToAdd);
-      const timer = setTimeout(() => {
-        current.classList.remove(classToAdd);
-      }, 400);
-
-      prevCartQuantity.current = totalQuantity;
-
-      return () => clearTimeout(timer);
+      setAnimationClass('fade-out');
     }
 
     prevCartQuantity.current = totalQuantity;
-  }, [cart]);
+    const timer = setTimeout(() => {
+      setAnimationClass('');
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [cart, totalQuantity]);
 
   const handleCartClick = () => {
     if (totalQuantity > 0 && typeof setIsCartOpen === 'function') {
@@ -61,44 +53,44 @@ const Navbar = () => {
   };
 
   return (
-    <header>
-      <div className='navbar'>
-        <ul className='navbar-menu'>
-          {categories.map((cat) => {
-            const isActive = activeCategory === cat.name.toLowerCase();
-            return (
-              <li key={cat.name} className='navbar-menu-item'>
-                <Link
-                  to={`/${cat.name.toLowerCase()}`}
-                  data-testid={
-                    isActive ? 'active-category-link' : 'category-link'
-                  }
-                  className={`navbar-category ${
-                    isActive ? 'active-category' : ''
-                  }`}
-                >
-                  {cat.name.toUpperCase()}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+    <header className='navbar'>
+      <ul className='navbar-menu'>
+        {categories.map((cat) => {
+          const isActive = activeCategory === cat.name.toLowerCase();
+          return (
+            <li key={cat.name} className='navbar-menu-item'>
+              <Link
+                to={`/${cat.name.toLowerCase()}`}
+                data-testid={
+                  isActive ? 'active-category-link' : 'category-link'
+                }
+                className={`navbar-category ${
+                  isActive ? 'active-category' : ''
+                }`}
+              >
+                {cat.name.toUpperCase()}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
 
-        <img className='nav-logo' src={Logo} alt='logo' />
+      <img className='nav-logo' src={Logo} alt='logo' />
 
-        <div
-          className={`nav-cart-icon ${
-            totalQuantity === 0 ? 'cart-disabled' : 'cart-active'
-          }`}
-          onClick={handleCartClick}
-          ref={cartIconRef}
-          data-testid='cart-btn'
-        >
-          <Cart />
-          {cart.length > 0 && (
-            <div className='nav-cart-count'>{totalQuantity}</div>
-          )}
-        </div>
+      <div
+        className={`nav-cart-icon ${
+          totalQuantity === 0 ? 'cart-disabled' : 'cart-active'
+        } `}
+        onClick={handleCartClick}
+        ref={cartIconRef}
+        data-testid='cart-btn'
+      >
+        <Cart />
+        {cart.length > 0 && (
+          <div className={`nav-cart-count ${animationClass}`}>
+            {totalQuantity}
+          </div>
+        )}
       </div>
     </header>
   );
