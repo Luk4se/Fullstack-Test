@@ -1,35 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\GraphQL\Type;
 
+use App\Repository\AttributeRepository;
+use App\Repository\CategoryRepository;
+use App\Repository\PriceRepository;
+use App\Repository\ProductGalleryRepository;
+use App\Repository\ProductRepository;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
-use App\Repository\CategoryRepository;
-use App\Repository\ProductRepository;
-use App\GraphQL\Type\CategoryType;
-use App\GraphQL\Type\ProductType;
 
-class QueryType extends ObjectType {
-    public function __construct() {
-        $productType = new ProductType();
+class QueryType extends ObjectType
+{
+    public function __construct(
+        CategoryRepository $categoryRepo,
+        ProductRepository $productRepo,
+        AttributeRepository $attributeRepo,
+        PriceRepository $priceRepo,
+        ProductGalleryRepository $galleryRepo
+    ) {
+        $productType = new ProductType($attributeRepo, $priceRepo, $galleryRepo);
         $categoryType = new CategoryType();
 
-        
         parent::__construct([
-            'name' => 'Query',
-            //Get All categories
+            'name'   => 'Query',
             'fields' => [
-               'categories' => [
-                'type' => Type::listOf($categoryType),
-                'resolve' => fn () => (new CategoryRepository())->findAll()
+                'categories' => [
+                    'type'    => Type::listOf($categoryType),
+                    'resolve' => fn () => $categoryRepo->findAll(),
                 ],
-
-            //Get All Products
                 'products' => [
-                    'type' => Type::listOf($productType),
-                    'resolve' => fn () => (new ProductRepository())->findAll()
-                ]
-            ]
+                    'type'    => Type::listOf($productType),
+                    'resolve' => fn () => $productRepo->findAll(),
+                ],
+            ],
         ]);
     }
 }

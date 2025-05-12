@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\GraphQL\Type;
 
 use GraphQL\Type\Definition\InputObjectType;
@@ -10,9 +12,9 @@ class AttributeInputType extends InputObjectType
     public function __construct()
     {
         parent::__construct([
-            'name' => 'AttributeInput',
+            'name'   => 'AttributeInput',
             'fields' => [
-                'attributeName' => Type::nonNull(Type::string()),
+                'attributeName'  => Type::nonNull(Type::string()),
                 'attributeValue' => Type::nonNull(Type::string()),
             ],
         ]);

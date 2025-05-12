@@ -1,4 +1,3 @@
-import React from 'react';
 import { useShop } from '../Context/ShopContext';
 import { useParams } from 'react-router-dom';
 import ProductDisplay from '../Components/ProductDisplay/ProductDisplay';
@@ -9,7 +8,6 @@ function Product() {
 
   if (loading) return <p>Loading product...</p>;
   if (error) return <p>Error loading product.</p>;
- 
 
   const product = all_product.find((element) => element.id === productId);
 

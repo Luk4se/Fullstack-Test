@@ -1,120 +1,118 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import './ProductDisplay.css';
-import Previous from '../Assets/previous.svg';
-import Next from '../Assets/next.svg';
+import Previous from '../../Utils/Assets/previous.svg';
+import Next from '../../Utils/Assets/next.svg';
 import { CartContext } from '../../Context/CartContext';
+import { toKebabCase } from '../../Utils/stringUtils';
 
 const ProductDisplay = ({ product }) => {
   const { addToCart, setIsCartOpen } = useContext(CartContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState({});
 
-  const nextImage = () => {
-    setCurrentIndex((prev) =>
-      prev === product.gallery.length - 1 ? 0 : prev + 1
-    );
-  };
+  const nextImage = () =>
+    setCurrentIndex((prev) => (prev + 1) % product.gallery.length);
 
-  const prevImage = () => {
+  const prevImage = () =>
     setCurrentIndex((prev) =>
       prev === 0 ? product.gallery.length - 1 : prev - 1
     );
-  };
 
   const handleSelect = (attrIndex, choiceIndex) => {
     setSelected((prev) => ({
       ...prev,
-      [attrIndex]: prev[attrIndex] === choiceIndex ? null : choiceIndex,
+      [attrIndex]: prev[attrIndex] === choiceIndex ? undefined : choiceIndex,
     }));
   };
 
-  const isButtonEnabled = 
-  product.inStock &&
-  product.attributes.every(
-    (_, index) => selected[index] !== undefined && selected[index] !== null
-  );
+  const isButtonEnabled =
+    product.inStock &&
+    product.attributes.every(
+      (_, index) => selected[index] !== undefined && selected[index] !== null
+    );
 
-  const getChoices = () => {
-    const choices = {};
-    product.attributes.forEach((attribute, attrIndex) => {
+  const getChoices = () =>
+    product.attributes.reduce((acc, attribute, attrIndex) => {
       const itemIndex = selected[attrIndex];
       if (itemIndex !== null && itemIndex !== undefined) {
-        choices[attribute.name] = attribute.items[itemIndex].value;
+        acc[attribute.name] = attribute.items[itemIndex].value;
       }
-    });
-    return choices;
-  };
-
-  const toKebabCase = (str) =>
-    str && str.replace(/\s+/g, '-').toLowerCase();
+      return acc;
+    }, {});
 
   return (
-    <div className="productdisplay">
-      <div
-        className="productdisplay-left"
-        data-testid="product-gallery">
-        <div className="productdisplay-img-list w-150 h-50">
+    <div className='productdisplay'>
+      <section className='productdisplay-left' data-testid='product-gallery'>
+        <div className='productdisplay-img-list'>
           {product.gallery.map((img, i) => (
-            <img key={i} onClick={() => setCurrentIndex(i)} src={img} alt="" />
+            <img
+              key={i}
+              onClick={() => setCurrentIndex(i)}
+              src={img}
+              alt={`Thumbnail ${i}`}
+              data-testid={`product-thumbnail-${i}`}
+            />
           ))}
         </div>
 
-        <div className="productdisplay-img object-contain">
+        <figure className='productdisplay-img'>
           <img
-            className="productdisplay-main-img w-0 h-100"
+            className='productdisplay-main-img'
             src={product.gallery[currentIndex]}
-            alt="Main product"/>
+            alt='Main product'
+            data-testid='product-main-image'
+          />
           <img
             onClick={prevImage}
-            className="productdisplay-img-previousimage w-0 h-10"
+            className='productdisplay-img-previousimage'
             src={Previous}
-            alt="Previous"/>
+            alt='Previous'
+            data-testid='previous-image'
+          />
           <img
             onClick={nextImage}
-            className="productdisplay-img-nextimage w-0 h-10"
+            className='productdisplay-img-nextimage'
             src={Next}
-            alt="Next"/>
-        </div>
-      </div>
+            alt='Next'
+            data-testid='next-image'
+          />
+        </figure>
+      </section>
 
-      <div className="productdisplay-right">
-        <h1>{product.name}</h1>
+      <section className='productdisplay-right'>
+        <h1 data-testid='product-name'>{product.name}</h1>
 
         {product.attributes.map((attribute, attrIndex) => (
-          <div
-            key={product.attributes?.[0].name}
-            className="productdisplay-attribute-name space-y-2">
-
-            <div className="font-bold" data-testid={`product-attribute-${toKebabCase(attribute.name)}`}>{attribute.name}:</div>
-            <div className="flex gap-1">
-              
+          <div key={attribute.name} className='productdisplay-attribute'>
+            <div className='productdisplay-attribute-name'>
+              {attribute.name}:
+            </div>
+            <div className='productdisplay-attribute-values'>
               {attribute.items.map((item, choiceIndex) => {
                 const isSelected = selected[attrIndex] === choiceIndex;
-                const commonStyles = { cursor: 'pointer' };
-
                 return attribute.name === 'Color' ? (
                   <div
                     key={choiceIndex}
-                    className="productdisplay-attribute-type-color"
-                    data-testid={`product-attribute-${toKebabCase(attribute.name)}-${(item.value)}`}
-                    style={{
-                      ...commonStyles,
-                      backgroundColor: item.value,
-                      outline: isSelected ? '1px solid #5cce81' : '',
-                      outlineOffset: '1px',
-                    }}
-                    onClick={() => handleSelect(attrIndex, choiceIndex)}/>
+                    className={`productdisplay-attribute-color ${
+                      isSelected ? 'selected-color' : ''
+                    }`}
+                    data-testid={`product-attribute-${toKebabCase(
+                      attribute.name
+                    )}-${item.value}`}
+                    style={{ backgroundColor: item.value }}
+                    onClick={() => handleSelect(attrIndex, choiceIndex)}
+                  />
                 ) : (
                   <div
                     key={choiceIndex}
-                    className="productdisplay-attribute-type-standard text-center items-center"
-                    data-testid={`product-attribute-${toKebabCase(attribute.name)}-${(item.value)}`}
-                    style={{
-                      ...commonStyles,
-                      backgroundColor: isSelected ? '#1d1f22' : 'white',
-                      color: isSelected ? 'white' : '#1d1f22',
-                    }}
-                    onClick={() => handleSelect(attrIndex, choiceIndex)}>
+                    className={`productdisplay-attribute-item ${
+                      isSelected ? 'selected-item' : ''
+                    }`}
+                    data-testid={`product-attribute-${toKebabCase(
+                      attribute.name
+                    )}-${item.value}`}
+                    onClick={() => handleSelect(attrIndex, choiceIndex)}
+                  >
                     {item.value}
                   </div>
                 );
@@ -123,30 +121,32 @@ const ProductDisplay = ({ product }) => {
           </div>
         ))}
 
-        <div className="productdisplay-right-price">PRICE:</div>
-        <div className="productdisplay-right-amount">{product.prices?.[0]?.currency.symbol}{product.prices?.[0]?.amount}</div>
+        <strong>PRICE:</strong>
+        <p data-testid='product-price'>
+          {product.prices?.[0]?.currency.symbol}
+          {product.prices?.[0]?.amount}
+        </p>
 
         <button
-          data-testid="add-to-cart"
-          style={{
-            backgroundColor: isButtonEnabled ? '#5cce81' : 'grey',
-            cursor: isButtonEnabled ? 'pointer' : 'not-allowed',
-          }}
+          className='productdisplay-add-to-cart'
+          data-testid='add-to-cart'
           disabled={!isButtonEnabled}
           onClick={() => {
             addToCart(product.id, getChoices());
             setIsCartOpen(true);
             window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}>
+          }}
+        >
           ADD TO CART
         </button>
 
-        <div
-          className="productdisplay-right-description"
-          data-testid="product-description">
+        <article
+          className='productdisplay-right-description'
+          data-testid='product-description'
+        >
           {product.description}
-        </div>
-      </div>
+        </article>
+      </section>
     </div>
   );
 };
