@@ -8,6 +8,7 @@ export const CartContext = createContext();
 const CartContextProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [insertOrder] = useMutation(CREATE_ORDER);
   const { all_product } = useShop();
 
@@ -27,6 +28,9 @@ const CartContextProvider = ({ children }) => {
   }, [cart]);
 
   const placeOrder = async () => {
+    if (isPlacingOrder || cart.length === 0) return;
+
+    setIsPlacingOrder(true);
     try {
       for (const item of cart) {
         const input = {
@@ -54,6 +58,8 @@ const CartContextProvider = ({ children }) => {
       console.error('Network error:', error.networkError);
       console.error('Full error object:', error);
       alert('Failed to place order.');
+    } finally {
+      setIsPlacingOrder(false);
     }
   };
 
@@ -72,7 +78,15 @@ const CartContextProvider = ({ children }) => {
 
       if (existingItemIndex > -1) {
         const updatedCart = [...prevCart];
-        updatedCart[existingItemIndex].quantity += quantity;
+        console.log(
+          'Before increment:',
+          updatedCart[existingItemIndex].quantity
+        );
+        updatedCart[existingItemIndex].quantity += 1;
+        console.log(
+          'After increment:',
+          updatedCart[existingItemIndex].quantity
+        );
         return updatedCart;
       } else {
         return [
@@ -111,6 +125,7 @@ const CartContextProvider = ({ children }) => {
     placeOrder,
     isCartOpen,
     setIsCartOpen,
+    isPlacingOrder,
   };
 
   return (

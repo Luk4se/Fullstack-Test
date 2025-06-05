@@ -11,6 +11,7 @@ const CartSidebar = () => {
     removeFromCart,
     addToCart,
     placeOrder,
+    isPlacingOrder,
   } = useCart();
   const sidebarRef = useRef(null);
 
@@ -24,11 +25,7 @@ const CartSidebar = () => {
   );
 
   useEffect(() => {
-    if (isCartOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = isCartOpen ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
@@ -37,6 +34,12 @@ const CartSidebar = () => {
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       setIsCartOpen(false);
+    }
+  };
+
+  const handlePlaceOrder = async () => {
+    if (!isPlacingOrder) {
+      await placeOrder();
     }
   };
 
@@ -101,10 +104,9 @@ const CartSidebar = () => {
                                     ? { backgroundColor: option.value }
                                     : {}
                                 }
-                                title={option.displayValue || option.value}
+                                title={option.value}
                               >
-                                {!isSwatch &&
-                                  (option.displayValue || option.value)}
+                                {!isSwatch && option.value}
                               </div>
                             );
                           })}
@@ -123,7 +125,9 @@ const CartSidebar = () => {
                   <div className='quantity-controls'>
                     <button
                       data-testid='cart-item-amount-increase'
-                      onClick={() => addToCart(item.id, item.choices)}
+                      onClick={() => {
+                        addToCart(item.id, item.choices);
+                      }}
                     >
                       +
                     </button>
@@ -143,13 +147,17 @@ const CartSidebar = () => {
 
         <footer className='cart-footer'>
           <div className='cart-total' data-testid='cart-total'>
-            <p>Total</p>
-            <p>
-              <strong>${totalPrice.toFixed(2)}</strong>
-            </p>
+            <p>Total</p>${totalPrice.toFixed(2)}
           </div>
-          <button className='place-order-btn' onClick={placeOrder}>
-            PLACE ORDER
+          <button
+            className={`place-order-btn ${
+              isPlacingOrder || cart.length === 0 ? 'disabled' : ''
+            }`}
+            onClick={handlePlaceOrder}
+            disabled={isPlacingOrder || cart.length === 0}
+            data-testid='place-order-btn'
+          >
+            {isPlacingOrder ? 'Placing Order...' : 'PLACE ORDER'}
           </button>
         </footer>
       </aside>

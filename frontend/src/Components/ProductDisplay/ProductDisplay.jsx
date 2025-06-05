@@ -4,20 +4,27 @@ import Previous from '../../Utils/Assets/previous.svg';
 import Next from '../../Utils/Assets/next.svg';
 import { CartContext } from '../../Context/CartContext';
 import { toKebabCase } from '../../Utils/stringUtils';
+import parse from 'html-react-parser';
 
 const ProductDisplay = ({ product }) => {
   const { addToCart, setIsCartOpen } = useContext(CartContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState({});
 
+  const formatDescription = (text) => {
+    return parse(text.replace(/\\n/g, '<br />'));
+  };
+
   const nextImage = () => {
     setCurrentIndex((prev) =>
-      prev < product.gallery.length - 1 ? prev + 1 : prev
+      prev < product.gallery.length - 1 ? prev + 1 : 0
     );
   };
 
   const prevImage = () => {
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : prev));
+    setCurrentIndex((prev) =>
+      prev > 0 ? prev - 1 : product.gallery.length - 1
+    );
   };
 
   const handleSelect = (attrIndex, choiceIndex) => {
@@ -64,27 +71,20 @@ const ProductDisplay = ({ product }) => {
             alt='Main product'
             data-testid='product-main-image'
           />
-
-          {product.gallery.length > 1 && currentIndex > 0 && (
-            <img
-              onClick={prevImage}
-              className='productdisplay-img-previousimage'
-              src={Previous}
-              alt='Previous'
-              data-testid='previous-image'
-            />
-          )}
-
-          {product.gallery.length > 1 &&
-            currentIndex < product.gallery.length - 1 && (
-              <img
-                onClick={nextImage}
-                className='productdisplay-img-nextimage'
-                src={Next}
-                alt='Next'
-                data-testid='next-image'
-              />
-            )}
+          <img
+            onClick={prevImage}
+            className='productdisplay-img-previousimage'
+            src={Previous}
+            alt='Previous'
+            data-testid='previous-image'
+          />
+          <img
+            onClick={nextImage}
+            className='productdisplay-img-nextimage'
+            src={Next}
+            alt='Next'
+            data-testid='next-image'
+          />
         </figure>
       </section>
 
@@ -153,7 +153,7 @@ const ProductDisplay = ({ product }) => {
           className='productdisplay-right-description'
           data-testid='product-description'
         >
-          {product.description}
+          {formatDescription(product.description)}
         </article>
       </section>
     </div>
