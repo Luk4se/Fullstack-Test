@@ -78,15 +78,7 @@ const CartContextProvider = ({ children }) => {
 
       if (existingItemIndex > -1) {
         const updatedCart = [...prevCart];
-        console.log(
-          'Before increment:',
-          updatedCart[existingItemIndex].quantity
-        );
         updatedCart[existingItemIndex].quantity += 1;
-        console.log(
-          'After increment:',
-          updatedCart[existingItemIndex].quantity
-        );
         return updatedCart;
       } else {
         return [
